@@ -13,8 +13,11 @@ class Bin:
 
 def get_bin_info(bin_url):
     bin_res = requests.get(bin_url)
+    if str(bin_res) == '<Response [404]>':
+        return
     bin_html = bin_res.text
     bin_element = etree.HTML(bin_html)
+    print(bin_url)
     bin_list_node = bin_element.xpath('//html/body/section[1]/section[3]/div/div/table/tbody')[0]
     # print(bin_list_node)
     bin_infos = bin_list_node.xpath('./tr')
@@ -78,4 +81,7 @@ if __name__ == '__main__':
         get_bin_list('https://bincheck.io/zh' + node.attrib['href'])
     s = json.dumps(bin_list)
     print(s)
+    with open('/bin.json') as f:
+        json.dump(bin_list, f)
+
 # 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
